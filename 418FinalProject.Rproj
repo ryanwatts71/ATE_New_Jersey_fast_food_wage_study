@@ -1,0 +1,45 @@
+library(data.table)
+ECON_418_518_Exam_3_Data_DT <- data.table(ECON_418_518_Exam_3_Data)
+
+
+df <- ECON_418_518_Exam_3_Data_DT
+
+# Create the indicator columns
+df$is_nov <- df$time_period == "Nov"
+df$is_nj <- df$state == 1
+
+#  mean total employment
+mean_total_emp_feb_pa <- mean(df$total_emp[df$is_nov == 0 & df$is_nj == 0])
+mean_total_emp_nov_pa <- mean(df$total_emp[df$is_nov == 1 & df$is_nj == 0])
+mean_total_emp_feb_nj <- mean(df$total_emp[df$is_nov == 0 & df$is_nj == 1]) 
+mean_total_emp_nov_nj <- mean(df$total_emp[df$is_nov == 1 & df$is_nj == 1])
+
+#  results
+print(c("Mean total employment in Pennsylvania in February:", mean_total_emp_feb_pa))
+print(c("Mean total employment in Pennsylvania in November:", mean_total_emp_nov_pa))
+print(c("Mean total employment in New Jersey in February:", mean_total_emp_feb_nj))
+print(c("Mean total employment in New Jersey in November:", mean_total_emp_nov_nj))
+
+# ATE model
+model <- lm(total_emp ~ state * time_period, data = ECON_418_518_Exam_3_Data_DT)
+> View(model)
+> summary(model)
+
+#ATT_Estimate
+  ATT_estimate <- coef(model)["Treatment:Time"]
+  
+  
+#model with restaurant_id
+  model <- lm(total_emp ~ state * time_period + restaurant_id, data = ECON_418_518_Exam_3_Data_DT)
+> summary(model)
+
+
+
+
+
+
+
+
+
+
+
